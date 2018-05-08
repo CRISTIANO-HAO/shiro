@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <import resource="spring-dao.xml"/>
+    <context:component-scan base-package="com.shiro"/>
+
+    <!--shiroFilter 名字和 web.xml 文件中的 shiroFilter是对应的，必须一致。-->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- Shiro的核心安全接口,这个属性是必须的 -->
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 身份认证失败，则跳转到登录页面的配置 -->
+        <property name="loginUrl" value="login.html"/>
+        <!-- 权限认证失败，则跳转到指定页面 -->
+        <property name="unauthorizedUrl" value="403.html"/>
+        <property name="filterChainDefinitions">
+            <value>
+                /login.html = anon
+                /index.html = anon
+                /login = anon
+                /* = authc
+            </value>
+        </property>
+    </bean>
+
+    <!--创建securityManager对象-->
+    <!--<bean id="securityManager" class="org.apache.shiro.mgt.DefaultSecurityManager"/>-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="customReaml"/>
+    </bean>
+
+    <!--自定义的Reaml-->
+    <bean id="customReaml" class="com.shiro.reaml.CustomReaml">
+        <property name="credentialsMatcher" ref="hashedCredentialsMatcher" />
+    </bean>
+
+    <!--加密算法-->
+    <bean id="hashedCredentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        <!--加密方式-->
+        <property name="hashAlgorithmName" value="md5"/>
+        <!--加密次数-->
+        <property name="hashIterations" value="1" />
+    </bean>
+</beans>
