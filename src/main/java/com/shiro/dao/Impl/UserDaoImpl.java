@@ -31,7 +31,7 @@ public class UserDaoImpl implements UserDao {
                 return user;
             }
         });
-        System.out.println(list.size());
+
         if (CollectionUtils.isEmpty(list)){
             return null;
         }
@@ -40,7 +40,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<String> getRolesByName(String username) {
-        String sql = "select role from roles where username = ?";
+        String sql = "select role from roles where name = ?";
         List<String> list = jdbcTemplate.query(sql, new String[]{username}, new RowMapper<String>() {
             @Override
             public String mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -56,8 +56,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<String> getPermissionByName(String username) {
-        String sql = "select permission from permissions where username = ?";
-        List<String> list = jdbcTemplate.query(sql, new String[]{username}, new RowMapper<String>() {
+        String sql = "select permission from permissions where name = ?";
+        List<String> list =jdbcTemplate.query(sql, new String[]{username}, new RowMapper<String>() {
             @Override
             public String mapRow(ResultSet resultSet, int i) throws SQLException {
                 return resultSet.getString("permission");

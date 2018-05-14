@@ -30,7 +30,6 @@ public class CustomReamlMd5 extends AuthorizingRealm{
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         //从认证信息中获取用户名
         String username = (String) authenticationToken.getPrincipal();
-        System.out.println(username);
         //获取密码
         String password = getPasswordByUsername(username);
         if (password == null){
@@ -47,8 +46,8 @@ public class CustomReamlMd5 extends AuthorizingRealm{
     }
 
     public static void main(String[] args) {
-        Md5Hash md5Hash = new Md5Hash("123456","mark");
+        Md5Hash md5Hash = new Md5Hash("123456","rose",5);
 
-        System.out.println(md5Hash.toString());//73bea81c6c06bacab41a995495239545
+        System.out.println(md5Hash.toString());//7057431d5a702aec1d534edf8e00ad9a
     }
 }

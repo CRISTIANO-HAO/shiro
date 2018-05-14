@@ -24,13 +24,15 @@ public class CustomReaml extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         //从认证信息中获取用户名
         String username = (String) principalCollection.getPrimaryPrincipal();
-        System.out.println("authorization: " + username);
-        List<String> roles = userDao.getRolesByName(username);
+        List<String> roles =  userDao.getRolesByName(username);
         List<String> permissions = userDao.getPermissionByName(username);
 
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.setStringPermissions((Set<String>) permissions);
-        simpleAuthorizationInfo.setRoles((Set<String>) roles);
+
+        System.out.println(roles.size());
+        System.out.println(permissions.size());
+        simpleAuthorizationInfo.setStringPermissions(new HashSet<String>(permissions));
+        simpleAuthorizationInfo.setRoles(new HashSet<String>(roles));
         return simpleAuthorizationInfo;
     }
 
@@ -41,7 +43,7 @@ public class CustomReaml extends AuthorizingRealm {
         String username = (String) authenticationToken.getPrincipal();
         //获取密码
         String password = userDao.getUserByName(username).getPassword();
-        System.out.println(password);
+
         if (password == null){
             return null;
         }

@@ -3,12 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!--shiroFilter 名字和 web.xml 文件中的 shiroFilter是对应的，必须一致。-->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
@@ -22,11 +23,23 @@
             <value>
                 /login.html = anon
                 /index.html = anon
+                /testAdmin = roles["admin"]
+                /testAdmins = roles["admin","user"]
+                /testUser = roles["user","admin"]
+                /testUsers = rolesOr["user","admin"]
                 /login = anon
                 /* = authc
             </value>
         </property>
+        <property name="filters">
+            <util:map>
+                <entry key="rolesOr" value-ref="rolesOrFilter"></entry>
+            </util:map>
+        </property>
     </bean>
+
+    <!--自定义的Filter-->
+    <bean class="com.shiro.filter.RolesOrFilter" id="rolesOrFilter" />
 
     <!--创建securityManager对象-->
     <!--<bean id="securityManager" class="org.apache.shiro.mgt.DefaultSecurityManager"/>-->
@@ -44,6 +57,6 @@
         <!--加密方式-->
         <property name="hashAlgorithmName" value="md5"/>
         <!--加密次数-->
-        <property name="hashIterations" value="1" />
+        <property name="hashIterations" value="5" />
     </bean>
 </beans>
