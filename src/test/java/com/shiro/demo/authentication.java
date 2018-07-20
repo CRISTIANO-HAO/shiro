@@ -14,7 +14,7 @@ public class authentication {
 
     @Before
     public void beforeTest(){
-        simpleAccountRealm.addAccount("who","123456");
+        simpleAccountRealm.addAccount("who","123456", "user","admin");
     }
 
     @Test

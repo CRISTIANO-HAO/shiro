@@ -9,7 +9,8 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!--shiroFilter 名字和 web.xml 文件中的 shiroFilter是对应的，必须一致。-->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
@@ -45,6 +46,7 @@
     <!--<bean id="securityManager" class="org.apache.shiro.mgt.DefaultSecurityManager"/>-->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="customReaml"/>
+        <property name="rememberMeManager" ref="cookieRememberMeManager"/>
     </bean>
 
     <!--自定义的Reaml-->
@@ -58,5 +60,15 @@
         <property name="hashAlgorithmName" value="md5"/>
         <!--加密次数-->
         <property name="hashIterations" value="5" />
+    </bean>
+
+    <!--自动登陆-->
+    <bean class="org.apache.shiro.web.mgt.CookieRememberMeManager" id="cookieRememberMeManager">
+        <property name="cookie" ref="cookie"/>
+    </bean>
+
+    <bean class="org.apache.shiro.web.servlet.SimpleCookie" id="cookie" >
+        <constructor-arg value="rememberMe"/>
+        <property name="maxAge" value="2592000"/>
     </bean>
 </beans>
